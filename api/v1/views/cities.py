@@ -10,8 +10,7 @@ import json
 
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
 def get_all_cities_of_state(state_id):
-    """Retrieves all the cities of a specific state based on id.
-    Can use get a post"""
+    """Retrieves all the cities of a specific state based on id."""
     state = storage.get("State", state_id)
     if state is None:
         abort(404)
