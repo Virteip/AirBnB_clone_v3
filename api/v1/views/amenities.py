@@ -8,8 +8,7 @@ from models.amenity import Amenity
 
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
 def get_amenities():
-    """ Retrieve amenities
-    """
+    """ Retrieve amenities """
     amenity_list = []
 
     for key, amenity in storage.all("Amenity").items():
@@ -20,8 +19,7 @@ def get_amenities():
 @app_views.route('/amenities/<amenity_id>',
                  methods=['GET'], strict_slashes=False)
 def get_amenity(amenity_id):
-    """ Retrieves amenities by id
-    """
+    """ Retrieves amenities by id """
     amenity_dict = storage.get("Amenity", amenity_id)
 
     if amenity:
@@ -33,8 +31,7 @@ def get_amenity(amenity_id):
 @app_views.route('/amenities/<amenity_id>',
                  methods=['DELETE'], strict_slashes=False)
 def delete(amenity_id):
-    """ Delete amenities
-    """
+    """ Delete amenities """
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
         abort(404)
@@ -47,8 +44,7 @@ def delete(amenity_id):
 
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
 def create():
-    """ Create amenities
-    """
+    """ Create amenities """
     if not request.json:
         abort(400, description="Not a JSON")
 
@@ -65,8 +61,7 @@ def create():
 @app_views.route('/amenities/<amenity_id>',
                  methods=['PUT'], strict_slashes=False)
 def update(amenity_id):
-    """ Update amenities
-    """
+    """ Update amenities """
     if not request.json:
         abort(400, description="Not a JSON")
 
