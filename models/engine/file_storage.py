@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from hashlib import md5
 
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -44,7 +45,7 @@ class FileStorage:
         """serializes __objects to the JSON file (path: __file_path)"""
         json_objects = {}
         for key in self.__objects:
-            json_objects[key] = self.__objects[key].to_dict()
+            json_objects[key] = self.__objects[key].to_dict(save_to_fs=1)
         with open(self.__file_path, 'w') as f:
             json.dump(json_objects, f)
 
@@ -54,6 +55,7 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
+                jo[key]['loadfromfile'] = 1
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
         except:
             pass
@@ -68,3 +70,25 @@ class FileStorage:
     def close(self):
         """call reload() method for deserializing the JSON file to objects"""
         self.reload()
+
+    def get(self, cls="", id=""):
+        """Retreives a single object based on class and id"""
+        if not isinstance(cls, str) or not isinstance(id, str):
+            return None
+        try:
+            return self.all(eval(cls)).get(cls + "." + id)
+        except:
+            return None
+
+    def count(self, cls=None):
+        """Gets count of objects in storage matching class name
+        if no class name is passed, return count of all objects
+        """
+        if cls is None:
+            return len(self.all())
+        if not isinstance(cls, str):
+            return None
+        try:
+            return len(self.all(eval(cls)))
+        except:
+            return None
