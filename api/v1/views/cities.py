@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """City API endpoint"""
-
 from models.city import City
 from models import storage
 from flask import abort, jsonify, request, make_response
