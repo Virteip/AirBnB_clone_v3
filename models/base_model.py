@@ -10,6 +10,8 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
+from hashlib import md5
+
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -29,6 +31,7 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
+            kwargs.pop('loadfromfile', None)
             for key, value in kwargs.items():
                 if key != "__class__":
                     setattr(self, key, value)
@@ -58,7 +61,7 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self):
+    def to_dict(self, save_to_fs=None):
         """returns a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
         if "created_at" in new_dict:
@@ -68,6 +71,13 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
+        if not save_to_fs:
+            new_dict.pop('password', None)
+            new_dict.pop('_User__password', None)
+        else:
+            pw = new_dict.pop('_User__password', None)
+            if pw:
+                new_dict['password'] = pw
         return new_dict
 
     def delete(self):

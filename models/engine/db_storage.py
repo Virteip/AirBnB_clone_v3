@@ -76,7 +76,7 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls="", id=""):
-        """Returns obj based on cls and id else None"""
+        """Retreives a single object based on class and id"""
         if not isinstance(cls, str) or not isinstance(id, str):
             return None
         try:
@@ -85,8 +85,9 @@ class DBStorage:
             return None
 
     def count(self, cls=None):
-        """Count number of objects in storage or specific number
-        of cls objects"""
+        """Gets count of objects in storage matching class name
+        if no class name is passed, return count of all objects
+        """
         if cls is None:
             return len(self.all())
         if not isinstance(cls, str):
